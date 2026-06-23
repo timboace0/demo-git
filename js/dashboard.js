@@ -1,7 +1,7 @@
 let signOutBtn = document.querySelector(".sign-out-link");
 let tbody = document.getElementById("table-body");
 let listUser = JSON.parse(localStorage.getItem("userList")) || [];
-// listUser.reverse();
+listUser.reverse();
 let currentPage = 1;
 let perPage = 5;
 let totalPage = 0;
