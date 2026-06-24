@@ -6,10 +6,14 @@ let dob = document.getElementById("dob");
 let fullName = document.getElementById("fullname");
 let sta = document.querySelector('input[name = "status"]:checked');
 let description = document.querySelector(".description-text-input");
-let idUser = Date.now();
+let idUser = `U${String(Date.now())}`;
 
 let hidePwd = document.querySelector(".fa-eye");
 let showPwd = document.querySelector(".fa-eye-slash");
+
+let userList = JSON.parse(localStorage.getItem("userList"));
+
+// let newDob = dob.value.split("-").revese().join("/");
 
 hidePwd.addEventListener("click", () => {
   pwd.type = "text";
@@ -159,6 +163,17 @@ function validateAddUser(username, email, password, fullname) {
       icon: "error",
       title: "Lỗi",
       text: "Password phải từ 8 ký tự trở lên!",
+    });
+    return false;
+  }
+  isEmailExist = userList.some((user) => {
+    return user.email === email;
+  });
+  if (isEmailExist) {
+    Swal.fire({
+      icon: "error",
+      title: "Lỗi",
+      text: "Email này đã tồn tại!",
     });
     return false;
   }

@@ -53,6 +53,7 @@ function validateSignIn(email, password) {
 
   if (user) {
     localStorage.setItem("userRole", user.role);
+    localStorage.setItem("userId", user.usercode);
     if (saveLogin.checked) {
       localStorage.setItem("savedUser", JSON.stringify(user));
     }

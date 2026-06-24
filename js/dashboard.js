@@ -1,7 +1,7 @@
 let signOutBtn = document.querySelector(".sign-out-link");
 let tbody = document.getElementById("table-body");
 let listUser = JSON.parse(localStorage.getItem("userList")) || [];
-listUser.reverse();
+// listUser.reverse();
 let currentPage = 1;
 let perPage = 5;
 let totalPage = 0;
@@ -9,6 +9,7 @@ let totalPage = 0;
 
 let userRole = localStorage.getItem("userRole");
 
+let userId = localStorage.getItem("userId");
 let perUser = [];
 
 let arrowLeft = document.querySelector(".arrow-left");
@@ -68,6 +69,7 @@ signOutBtn.addEventListener("click", (e) => {
   localStorage.removeItem("savedUser");
   localStorage.removeItem("editingUserId");
   localStorage.removeItem("userRole");
+  localStorage.removeItem("userId");
   window.location.href = "./sign-in.html";
 });
 
@@ -75,17 +77,16 @@ renderUser(perUser);
 
 function renderUser(users) {
   tbody.innerHTML = "";
-  // users.reverse();
   users.forEach((element) => {
     let tr = document.createElement("tr");
 
     let statusClass = element.status === "Active" ? "active" : "deactive";
+    let role = element.role === "admin" ? "role-admin" : "role-user";
 
     tr.innerHTML = `<td class="usercode">${element.usercode}</td>
     <td>${element.username}</td>
-    <td>${element.fullname || "N/A"}</td>
     <td>${element.email}</td>
-    <td>${element.role}</td>
+    <td><span class="${role}">${element.role}</span></td>
     <td>${element.birthday}</td>
     <td class = "${statusClass}">${element.status}</td>
     <td><button class="edit-btn" id=${element.usercode}>Sửa</button>
@@ -100,7 +101,7 @@ function renderUser(users) {
 // let delBtn = document.querySelector(".del-btn");
 
 tbody.addEventListener("click", (e) => {
-  let targetId = Number(e.target.id);
+  let targetId = e.target.id;
   if (e.target.classList.contains("edit-btn")) {
     if (userRole === "admin") {
       localStorage.setItem("editingUserId", e.target.id);
@@ -115,6 +116,13 @@ tbody.addEventListener("click", (e) => {
   if (e.target.classList.contains("del-btn")) {
     // console.log("delete function");
     if (userRole === "admin") {
+      if (targetId === userId) {
+        Swal.fire({
+          icon: "warning",
+          title: "Bạn đăng đăng nhập tài khoản này! Không thể xóa!",
+        });
+        return;
+      }
       Swal.fire({
         icon: "warning",
         title: "Bạn có chắc xóa user này?",
@@ -168,3 +176,13 @@ inputSearch.addEventListener("input", () => {
     renderUser(perUser);
   }
 });
+
+// let searchIcon = document.querySelector(".fa-magnifying-glass");
+// searchIcon.addEventListener("click", () => {
+//   let keyword = inputSearch.value.toLowerCase();
+
+//   let filteredUsers = listUser.filter((user) => {
+//     return user.username.toLowerCase().includes(keyword);
+//   });
+//   renderUser(filteredUsers);
+// });
